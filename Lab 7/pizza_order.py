@@ -1,18 +1,42 @@
 TOPPINGS = {"cheese": 40, "olives": 30, "onion": 20, "paneer": 50}
 SIZES = {"S": 8, "M": 10, "L": 12}
 
+
 def toppings_price(toppings_csv):
+    if not isinstance(toppings_csv, str):
+        return 0
+
     total = 0
-    for t in toppings_csv.split(','):
-        total += TOPPINGS[t.strip().lower()]
+    for topping in toppings_csv.split(','):
+        cleaned = topping.strip().lower()
+        if cleaned in TOPPINGS:
+            total += TOPPINGS[cleaned]
     return total
 
+
 def pizza_inches(size):
-    return SIZES[size.strip().upper()]
+    if not isinstance(size, str):
+        return 0
+
+    normalized = size.strip().upper()
+    return SIZES.get(normalized, 0)
+
 
 def split_bill(text):
-    total, people = text.split('/')
-    return round(int(total) / int(people), 2)
+    if not isinstance(text, str):
+        return 0.0
+
+    try:
+        total_str, people_str = text.split('/')
+        total = float(total_str.strip())
+        people = float(people_str.strip())
+    except (ValueError, TypeError):
+        return 0.0
+
+    if people == 0:
+        return 0.0
+
+    return round(total / people, 2)
 
 def main():
     print("==== Running toppings_price ====")
